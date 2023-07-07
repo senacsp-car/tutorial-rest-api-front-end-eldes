@@ -12,14 +12,19 @@ export default function HomeScreen() {
   const [nome, setNome] = useState<string>();
   const [descricao, setDescricao] = useState<string>();
 
+  const [carregando, setCarregando] = useState(false);
 
   useEffect(function () {
+    setCarregando(true);
     axios.get('http://localhost:4000/api/itens')
     .then(function (response) {
       setItens(response.data);
     })
     .catch(function (error) {
       alert(error);
+    })
+    .finally(function () {
+      setCarregando(false);
     });
   }, []);
 
@@ -39,6 +44,9 @@ export default function HomeScreen() {
   return (
     <div>
       <h1>Home</h1>
+      {(carregando) && (
+        <div>Carregando...</div>
+      )}
       <ul>
         {itens.map(function (item) {
           return <li>{item.nome}</li>
